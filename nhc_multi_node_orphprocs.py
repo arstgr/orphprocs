@@ -1,8 +1,8 @@
 #!/usr/bin/python3.6
 
-## percent instantaneous VM cpu load above which the test reports failure
+## default percent instantaneous VM cpu load above which the test reports failure
 INST_TRSHLD = 20.0
-## percent average VM cpu load above which the test reports failure
+## default percent average VM cpu load above which the test reports failure
 AVG_TRSHLD = 10.0
 
 import sys
@@ -143,12 +143,13 @@ def summarize_VM_load(results):
 
 ############################################################################################
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-parser.add_argument("-a", "--avg-load-threshold", default="10", type=float, help="Threshold for average load on the VM")
-parser.add_argument("-i", "--inst-load-threshold", default=20, type=float, help="Threshold for instantaneous load on the VM")
+parser.add_argument("-a", "--avg-load-threshold", default=AVG_TRSHLD, type=float, help="Threshold for average load on the VM")
+parser.add_argument("-i", "--inst-load-threshold", default=INST_TRSHLD, type=float, help="Threshold for instantaneous load on the VM")
 args = vars(parser.parse_args())
+#print(args)
 
-AVG_TRSHLD = args["avg-load-threshold"]
-INST_TRSHLD = args["inst-load-threshold"]
+AVG_TRSHLD = args['avg_load_threshold']
+INST_TRSHLD = args['inst_load_threshold']
 
 check_pssh()
 outputlist = find_VMs()
