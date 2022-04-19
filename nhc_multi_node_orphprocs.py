@@ -93,14 +93,23 @@ def multi_VM_uptime_test(results):
 
 def check_VM_load(results):
     for i in results.keys():
-        if float(results[i]['5min']) > float(AVG_TRSHLD) and float(results[i]['1min']) > float(AVG_TRSHLD) and float(results[i]['CPU%']) > float(INST_THRSHLD):
+        if float(results[i]['5min']) >= float(AVG_TRSHLD) and float(results[i]['1min']) >= float(AVG_TRSHLD) and float(results[i]['CPU%']) >= float(INST_TRSHLD):
             results[i]['STATUS'] = 'FAILED'
-        elif float(results[i]['1min']) > float(AVG_TRSHLD) and float(results[i]['CPU%']) > float(INST_THRSHLD):
+        elif float(results[i]['1min']) >= float(AVG_TRSHLD) and float(results[i]['CPU%']) >= float(INST_TRSHLD):
+            results[i]['STATUS'] = 'FAILED'
+        elif float(results[i]['1min']) < float(AVG_TRSHLD) and float(results[i]['CPU%']) >= float(INST_TRSHLD): 
             results[i]['STATUS'] = 'TRANSIENT'
         else:
             results[i]['STATUS'] = 'PASSED'
 
     return results
+
+def summarize_VM_load(results):
+    summary = {}
+    for i in results.keys():
+        summary[i] = results[i]['STATUS']
+
+    return summary
 
 ############################################################################################
 
@@ -112,17 +121,19 @@ results = multi_VM_inst_test()
 
 results = multi_VM_uptime_test(results)
 results = check_VM_load(results)
+summary = summarize_VM_load(results)
 
-print("Test Results")
-json_results = json.dumps(results, indent = 4)
-print(json_results)
+#print("Test Results")
+#json_results = json.dumps(results, indent = 4)
+#print(json_results)
 
-#prints test results in json format
-#print("Test Result")
-#json_output = json.dumps(output, indent = 4)
-#print(json_output)
+print("Test Summary")
+json_summary = json.dumps(summary, indent = 4)
+print(json_summary)
 
 #outputs the test results into a json file
 with open("VM_loads.json", "w") as outfile:
         json.dump(results, outfile, indent = 4)
 
+with open("VM_loads_summary.json", "w") as outfile:
+        json.dump(summary, outfile, indent = 4)
