@@ -13,7 +13,9 @@ import subprocess
 import json
 import re
 
-print("running the health check script")
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+import warnings
+warnings.simplefilter("ignore")
 
 # obtains list of available VMs (currently PBS, should be extended to slurm as well)
 def find_VMs():
@@ -140,6 +142,14 @@ def summarize_VM_load(results):
     return summary
 
 ############################################################################################
+parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
+parser.add_argument("-a", "--avg-load-threshold", default="10", type=float, help="Threshold for average load on the VM")
+parser.add_argument("-i", "--inst-load-threshold", default=20, type=float, help="Threshold for instantaneous load on the VM")
+args = vars(parser.parse_args())
+
+AVG_TRSHLD = args["avg-load-threshold"]
+INST_TRSHLD = args["inst-load-threshold"]
+
 check_pssh()
 outputlist = find_VMs()
 
