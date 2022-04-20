@@ -124,7 +124,7 @@ def check_VM_load(results, failed_hosts):
         elif float(results[i]['1min']) >= float(AVG_TRSHLD) and float(results[i]['CPU%']) >= float(INST_TRSHLD):
             results[i]['STATUS'] = 'FAILED'
         elif float(results[i]['1min']) < float(AVG_TRSHLD) and float(results[i]['CPU%']) >= float(INST_TRSHLD): 
-            results[i]['STATUS'] = 'TRANSIENT'
+            results[i]['STATUS'] = 'PASSED' #'TRANSIENT'  #For now let's keep it in fail/pass state
         else:
             results[i]['STATUS'] = 'PASSED'
 
